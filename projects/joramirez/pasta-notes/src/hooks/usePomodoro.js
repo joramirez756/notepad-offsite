@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-export function usePomodoro(onBreakSuggested) {
+export function usePomodoro(onBreakSuggested, { pomodoroLength = 25, breakLength = 5 } = {}) {
   const [isRunning, setIsRunning] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0); // seconds
   const [isOnBreak, setIsOnBreak] = useState(false);
@@ -11,8 +11,8 @@ export function usePomodoro(onBreakSuggested) {
   const intervalRef = useRef(null);
   const breakIntervalRef = useRef(null);
 
-  const POMODORO_LENGTH = 25 * 60; // 25 minutes in seconds
-  const BREAK_LENGTH = 5 * 60; // 5 minutes in seconds
+  const POMODORO_LENGTH = pomodoroLength * 60; // configurable minutes to seconds
+  const BREAK_LENGTH = breakLength * 60; // configurable minutes to seconds
 
   // Main work timer
   useEffect(() => {

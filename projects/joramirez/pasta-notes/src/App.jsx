@@ -3,9 +3,11 @@ import RichTextEditor from './components/Editor/RichTextEditor';
 import Sidebar from './components/Notes/Sidebar';
 import PomodoroTimer from './components/Pomodoro/PomodoroTimer';
 import PastaSprite from './components/Sprite/PastaSprite';
+import SettingsPanel from './components/Settings/SettingsPanel';
 import { usePomodoro } from './hooks/usePomodoro';
 import { useNotes } from './hooks/useNotes';
 import { getDialogue } from './utils/pomodoroDialogue';
+import { getTimerMockery, TIMER_THRESHOLDS } from './utils/timerMockery';
 import { loadSettings, saveSettings } from './utils/storage';
 import './App.css';
 
@@ -13,6 +15,7 @@ function App() {
   const [settings, setSettings] = useState(() => loadSettings());
   const [spriteDialogue, setSpriteDialogue] = useState('');
   const [showBreakPrompt, setShowBreakPrompt] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const {
     notes,
@@ -34,7 +37,10 @@ function App() {
     setShowBreakPrompt(true);
   }, []);
 
-  const pomodoro = usePomodoro(handleBreakSuggested);
+  const pomodoro = usePomodoro(handleBreakSuggested, {
+    pomodoroLength: settings.pomodoroLength,
+    breakLength: settings.breakLength,
+  });
 
   const handleTakeBreak = () => {
     pomodoro.takeBreak();
@@ -51,6 +57,27 @@ function App() {
     const newSettings = { ...settings, selectedSprite: spriteId };
     setSettings(newSettings);
     saveSettings(newSettings);
+  };
+
+  const handleSaveSettings = ({ pomodoroLength, breakLength }) => {
+    const newSettings = { ...settings, pomodoroLength, breakLength };
+    setSettings(newSettings);
+    saveSettings(newSettings);
+    setShowSettings(false);
+    pomodoro.resetTimer();
+
+    // Check if settings are ridiculous and mock the user
+    if (pomodoroLength < TIMER_THRESHOLDS.work.tooShort) {
+      setSpriteDialogue(getTimerMockery('workTooShort', { time: pomodoroLength }));
+    } else if (pomodoroLength > TIMER_THRESHOLDS.work.tooLong) {
+      setSpriteDialogue(getTimerMockery('workTooLong', { time: pomodoroLength }));
+    } else if (breakLength < TIMER_THRESHOLDS.break.tooShort) {
+      setSpriteDialogue(getTimerMockery('breakTooShort', { time: breakLength }));
+    } else if (breakLength > TIMER_THRESHOLDS.break.tooLong) {
+      setSpriteDialogue(getTimerMockery('breakTooLong', { time: breakLength }));
+    } else {
+      setSpriteDialogue(getTimerMockery('justRight', { workTime: pomodoroLength, breakTime: breakLength }));
+    }
   };
 
   const handleUpdateContent = (content) => {
@@ -101,6 +128,9 @@ function App() {
               )}
             </div>
             <div className="header-right">
+              <button className="btn-settings" onClick={() => setShowSettings(true)} title="Timer Settings">
+                ⚙️
+              </button>
               <PomodoroTimer
                 isRunning={pomodoro.isRunning}
                 formattedTime={pomodoro.formattedTime}
@@ -144,6 +174,16 @@ function App() {
         onIgnoreBreak={handleIgnoreBreak}
         onSelectSprite={handleSelectSprite}
       />
+
+      {/* Settings panel */}
+      {showSettings && (
+        <SettingsPanel
+          currentPomodoroLength={settings.pomodoroLength}
+          currentBreakLength={settings.breakLength}
+          onSave={handleSaveSettings}
+          onClose={() => setShowSettings(false)}
+        />
+      )}
     </div>
   );
 }
