@@ -1,0 +1,132 @@
+.pomodoro-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background: var(--toolbar-bg);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  gap: 8px;
+  min-width: 120px;
+}
+
+.pomodoro-widget.on-break {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.pomodoro-progress {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-bg {
+  fill: none;
+  stroke: var(--border-color);
+  stroke-width: 3;
+}
+
+.progress-fill {
+  fill: none;
+  stroke: var(--accent-color);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease;
+}
+
+.pomodoro-time {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+}
+
+.pomodoro-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-pomodoro {
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.btn-pomodoro.start {
+  background: var(--accent-color);
+  color: white;
+}
+
+.btn-pomodoro.pause {
+  background: #FFA500;
+  color: white;
+}
+
+.btn-pomodoro.reset {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
+.btn-pomodoro:hover {
+  transform: scale(1.15);
+}
+
+.pomodoro-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.break-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  text-align: center;
+}
+
+.break-icon {
+  font-size: 24px;
+  animation: steam 2s ease-in-out infinite;
+}
+
+@keyframes steam {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.break-label {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.break-timer {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.break-message {
+  font-size: 11px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
