@@ -2,9 +2,17 @@
 
 > A cute, pasta-themed note-taking application that uses the Pomodoro Technique to keep you productive (and entertained).
 
-## 🎬 Demo
+## 🎬 Demo Videos
 
-https://github.com/user-attachments/assets/pasta-notes-demo.mp4
+We have recorded demos covering every major feature:
+
+| Demo | Description |
+|------|-------------|
+| [Editor Features](demo/editor-features.webm) | Bold, italic, underline, fonts, colors, tables |
+| [Sprite Interactions](demo/sprite-interactions.webm) | Click, right-click menu, throw sauce, pull noodle, change sprite, clean stains |
+| [Pomodoro Escalation](demo/pomodoro-escalation.webm) | All 5 escalation levels when ignoring break reminders |
+| [Timer Mockery](demo/timer-mockery.webm) | Setting extreme work/break times and getting mocked by the sprite |
+| [Note Management](demo/note-management.webm) | Creating notes, switching between them, sections |
 
 *Your pasta buddy reminds you to take breaks — and gets increasingly dramatic if you ignore them!*
 
@@ -22,8 +30,14 @@ https://github.com/user-attachments/assets/pasta-notes-demo.mp4
 - Insert line and pie charts
 
 ### 🍅 Pomodoro Timer
-- 25-minute work sessions with visual progress ring
-- 5-minute enforced breaks (app locks you out!)
+- Configurable work sessions (default 25 minutes) with visual progress ring
+- Configurable break length (default 5 minutes) with enforced lockout
+- ⚙️ Settings panel to adjust both timers
+- **Timer mockery**: Set extreme values and your pasta sprite roasts you!
+  - Work too short (< 5 min): *"A work session that short? Even instant ramen takes longer!"*
+  - Work too long (> 2 hrs): *"Planning to work THAT long?! Even marathon runners take water breaks!"*
+  - Break too short (< 2 min): *"That's barely enough time to boil a single piece of penne!"*
+  - Break too long (> 30 min): *"At that point just take a nap! Even lasagna doesn't rest that long!"*
 - Escalating break reminders that get more aggressive the longer you ignore them:
   - Level 0: *"Hey, nice job! You've been pasta-tively productive!"*
   - Level 1: *"Still going? Even spaghetti snaps if you stretch it too far."*
