@@ -1,16 +1,28 @@
-# React + Vite
+# 🍝 Pasta Notes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A cute, pasta-themed note-taking app with Pomodoro Technique integration and interactive pasta sprite companions.
 
-Currently, two official plugins are available:
+**[Full Documentation →](docs/README.md)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick Start
 
-## React Compiler
+```bash
+npm install
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Open http://localhost:5173
 
-## Expanding the ESLint configuration
+## Demo
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+See the recorded demo: [`docs/demo/pasta-notes-demo.mp4`](docs/demo/pasta-notes-demo.mp4)
+
+## Highlights
+
+- 📝 Rich text editor with formatting, images, tables, and charts
+- 🍅 Pomodoro timer with escalating (and hilarious) break reminders
+- 🍝 10 interactive pasta sprite companions
+- 📁 Notes organized in sections, stored in localStorage
+- 🎨 Cute pink UI theme
+
+Built by a team of AI agents — see [docs/README.md](docs/README.md) for details.
