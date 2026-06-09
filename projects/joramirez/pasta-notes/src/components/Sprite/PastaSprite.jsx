@@ -3,6 +3,33 @@ import { getSpriteById, pastaSprites } from '../../utils/pastaSprites';
 import { getGreeting, getEncouragement } from '../../utils/pomodoroDialogue';
 import './Sprite.css';
 
+// Generate an organic splatter SVG path from random points
+function generateSplatPath(points) {
+  if (!points || points.length < 3) return 'M50,50 m-10,0 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0';
+  const cx = 50, cy = 50;
+  const pathPoints = points.map(p => {
+    const rad = (p.angle * Math.PI) / 180;
+    const dist = p.distance * 35;
+    return {
+      x: cx + Math.cos(rad) * dist,
+      y: cy + Math.sin(rad) * dist,
+    };
+  }).sort((a, b) => Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx));
+
+  let d = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
+  for (let i = 1; i < pathPoints.length; i++) {
+    const prev = pathPoints[i - 1];
+    const curr = pathPoints[i];
+    const cpx = (prev.x + curr.x) / 2 + (Math.random() - 0.5) * 15;
+    const cpy = (prev.y + curr.y) / 2 + (Math.random() - 0.5) * 15;
+    d += ` Q ${cpx} ${cpy} ${curr.x} ${curr.y}`;
+  }
+  const first = pathPoints[0];
+  const last = pathPoints[pathPoints.length - 1];
+  d += ` Q ${(last.x + first.x) / 2 + (Math.random() - 0.5) * 10} ${(last.y + first.y) / 2 + (Math.random() - 0.5) * 10} ${first.x} ${first.y} Z`;
+  return d;
+}
+
 export default function PastaSprite({
   selectedSpriteId,
   dialogue,
@@ -91,18 +118,30 @@ export default function PastaSprite({
     const colors = ['#FF6347', '#DC143C', '#228B22', '#FFFACD', '#FFA500'];
     const newDrops = Array.from({ length: 5 }, (_, i) => ({
       id: Date.now() + i,
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
+      x: Math.random() * (window.innerWidth - 60) + 30,
+      y: Math.random() * (window.innerHeight - 60) + 30,
       color: colors[Math.floor(Math.random() * colors.length)],
-      size: 10 + Math.random() * 20,
+      size: 15 + Math.random() * 35,
+      rotation: Math.random() * 360,
+      // Generate splatter shape (random blob points)
+      splatterPoints: Array.from({ length: 8 }, () => ({
+        angle: Math.random() * 360,
+        distance: 0.3 + Math.random() * 0.7,
+      })),
     }));
     setSauceDrops(prev => [...prev, ...newDrops]);
-    setCurrentDialogue("Mamma mia! 🤌 Now THAT'S what I call adding some color to your notes!");
+    setCurrentDialogue("Mamma mia! 🤌 Now THAT'S what I call adding some color to your notes! Right-click me to clean up!");
     setShowDialogue(true);
-    setTimeout(() => {
-      setSauceDrops(prev => prev.filter(d => !newDrops.includes(d)));
-    }, 3000);
     setTimeout(() => setShowDialogue(false), 4000);
+  };
+
+  // Clean up sauce stains
+  const handleCleanSauce = () => {
+    setSauceDrops([]);
+    setCurrentDialogue("Squeaky clean! ✨ Your notes look good as new... for now! 😏");
+    setShowDialogue(true);
+    setShowMenu(false);
+    setTimeout(() => setShowDialogue(false), 3000);
   };
 
   // Random encouragement
@@ -121,19 +160,40 @@ export default function PastaSprite({
 
   return (
     <>
-      {/* Sauce drops */}
+      {/* Sauce stains - persistent until cleaned */}
       {sauceDrops.map(drop => (
-        <div
+        <svg
           key={drop.id}
-          className="sauce-drop"
+          className="sauce-stain"
           style={{
-            left: drop.x,
-            top: drop.y,
-            width: drop.size,
-            height: drop.size,
-            backgroundColor: drop.color,
+            position: 'fixed',
+            left: drop.x - drop.size / 2,
+            top: drop.y - drop.size / 2,
+            width: drop.size * 2,
+            height: drop.size * 2,
+            zIndex: 9998,
+            pointerEvents: 'none',
+            transform: `rotate(${drop.rotation}deg)`,
           }}
-        />
+          viewBox="0 0 100 100"
+        >
+          <path
+            d={generateSplatPath(drop.splatterPoints)}
+            fill={drop.color}
+            opacity="0.7"
+          />
+          {/* Inner darker spot */}
+          <circle cx="50" cy="50" r="15" fill={drop.color} opacity="0.9" />
+          {/* Shine/glisten */}
+          <ellipse cx="42" cy="42" rx="5" ry="3" fill="white" opacity="0.2" transform="rotate(-30 42 42)" />
+          {/* Drip */}
+          <path
+            d={`M50 70 Q${48 + Math.random() * 4} ${80 + Math.random() * 10} ${49 + Math.random() * 2} ${90 + Math.random() * 5}`}
+            fill={drop.color}
+            opacity="0.6"
+            strokeWidth="0"
+          />
+        </svg>
       ))}
 
       {/* Sprite container */}
@@ -190,6 +250,11 @@ export default function PastaSprite({
             <button onClick={() => { handleThrowSauce(); setShowMenu(false); }}>
               🍅 Throw Sauce!
             </button>
+            {sauceDrops.length > 0 && (
+              <button onClick={handleCleanSauce}>
+                🧽 Clean Up Stains
+              </button>
+            )}
             <button onClick={() => { setShowSpriteSelector(true); setShowMenu(false); }}>
               🔄 Change Pasta
             </button>
